@@ -116,7 +116,7 @@ class EmployeeController extends BaseController
             'id' => $employee->id,
             'name' => $employee->first_name. ' ' .$employee->last_name,
             'email' => $employee->email,
-            'phone_number' => $employee->website,
+            'phone_number' => $employee->phone_number,
             'company_id' => $employee->company_id
         ]);
     }
@@ -134,7 +134,7 @@ class EmployeeController extends BaseController
         return $this->showOne([
             'name' => $employee->first_name. ' ' .$employee->last_name,
             'email' => $employee->email,
-            'phone_number' => $employee->website,
+            'phone_number' => $employee->phone_number,
             'company_id' => $employee->company_id
         ]);
     }

@@ -60,7 +60,7 @@ class CompanyController extends BaseController
 
         $logo = Storage::disk('images')->put('', $request->logo);
 
-        $data['logo'] = URL::asset("/img/".explode('/', $logo)[1]);
+        $data['logo'] = URL::asset("/img/".$logo);
 
         $company = Company::create($data);
 
@@ -122,7 +122,7 @@ class CompanyController extends BaseController
 
             $stored_logo = Storage::disk('images')->put('', $request->logo);
 
-            $logo = URL::asset("/img/".explode('/', $stored_logo)[1]);
+            $logo = URL::asset("/img/".$stored_logo);
 
             $company->logo = $logo;
         }
@@ -130,10 +130,6 @@ class CompanyController extends BaseController
         if(!$company->isDirty()) {
             return $this->errorResponse('You need to specify a different value to update',
                  422);
-        }
-
-        if ($request->has('logo')) {
-            $company->logo = $request->logo;
         }
 
         $company->updated_at = now();
