@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Company;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CompanyFactory extends Factory
@@ -27,7 +28,7 @@ class CompanyFactory extends Factory
             'name' => $name,
             'email' => 'info@'. $name .'.com',
             'website' => 'www.'. $name .'.com',
-            'logo' => 'forgot-password-office.jpeg'
+            'logo' => URL::asset("/img/forgot-password-office.jpeg")
         ];
     }
 }

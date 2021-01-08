@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Company;
 use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BaseController;
 
@@ -59,7 +60,7 @@ class CompanyController extends BaseController
 
         $logo = Storage::disk('images')->put('', $request->logo);
 
-        $data['logo'] = explode('/', $logo)[1];
+        $data['logo'] = URL::asset("/img/".explode('/', $logo)[1]);
 
         $company = Company::create($data);
 
@@ -121,7 +122,7 @@ class CompanyController extends BaseController
 
             $stored_logo = Storage::disk('images')->put('', $request->logo);
 
-            $logo = explode('/', $stored_logo)[1];
+            $logo = URL::asset("/img/".explode('/', $stored_logo)[1]);
 
             $company->logo = $logo;
         }
