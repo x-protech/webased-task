@@ -27,7 +27,7 @@ class CompanyFactory extends Factory
             'name' => $name,
             'email' => 'info@'. $name .'.com',
             'website' => 'www.'. $name .'.com',
-            'logo' => 'nothing till now'
+            'logo' => 'forgot-password-office.jpeg'
         ];
     }
 }

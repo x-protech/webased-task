@@ -57,9 +57,9 @@ class CompanyController extends BaseController
 
         $data = $request->all();
 
-        $data['logo'] = Storage::disk('images')->put('', $request->logo);
+        $logo = Storage::disk('images')->put('', $request->logo);
 
-        // return response()->json($data['logo']);
+        $data['logo'] = explode('/', $logo)[1];
 
         $company = Company::create($data);
 
@@ -68,8 +68,8 @@ class CompanyController extends BaseController
             'name' => $company->name,
             'email' => $company->email,
             'website' => $company->website,
-            'logo' => $company->logo]
-        );
+            'logo' => $company->logo
+        ]);
     }
 
     /**
@@ -118,7 +118,11 @@ class CompanyController extends BaseController
         }
 
         if ($request->has('logo')) {
-            $logo = Storage::disk('images')->put('', $request->logo);
+
+            $stored_logo = Storage::disk('images')->put('', $request->logo);
+
+            $logo = explode('/', $stored_logo)[1];
+
             $company->logo = $logo;
         }
 
