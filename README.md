@@ -9,12 +9,6 @@
 ## Installation
 
 ```
-# Clone the repository from GitHub and open the directory:
-git clone https://github.com/miten5/larawind.git
-
-# cd into your project directory
-cd larawind
-
 # install composer and npm packages
 composer install
 npm install && npm run dev
@@ -28,11 +22,11 @@ npm install && npm run dev
 ### The App will be seeded with :
 #### 1. A user that you could use to login using an email: admin@admin.com and password: password
 #### 2. 5 fake companies 
-#### 3. 25 fake employees 5 for each company  
+#### 3. 25 fake employeesAPI 5 for each company  
 
 ## Using Routes with Postman
 
-### Route: http://localhost:8000/companies Method: GET
+### Route: http://localhost:8000/companiesAPI Method: GET
 #### Action: returns all the companies
 #### The Data will be recieved from postman in this shape:
 ```
@@ -55,7 +49,7 @@ npm install && npm run dev
     "previous_page": 
 }
 ```
-### Route: http://localhost:8000/companies Method: POST
+### Route: http://localhost:8000/companiesAPI Method: POST
 #### Action: create new company and return it
 #### The Data will be recieved from postman in this shape:
 ```
@@ -78,7 +72,7 @@ npm install && npm run dev
     }
 }
 ```
-### Route: http://localhost:8000/companies/id Method: POST
+### Route: http://localhost:8000/companiesAPI/id Method: POST
 #### Action: Update a spcific company and return it
 #### The Data will be recieved from postman in this shape:
 ```
@@ -101,7 +95,7 @@ npm install && npm run dev
     }
 }
 ```
-### Route: http://localhost:8000/companies/id Method: DESTROY
+### Route: http://localhost:8000/companiesAPI/id Method: DESTROY
 #### Action: Soft delete a specific company and return it
 #### The Data will be recieved from postman in this shape:
 ```
@@ -118,7 +112,7 @@ npm install && npm run dev
     }
 }
 ```
-### Route: http://localhost:8000/employees Method: GET
+### Route: http://localhost:8000/employeesAPI Method: GET
 #### Action: return all employees
 #### The Data will be recieved from postman in this shape:
 ```
@@ -140,7 +134,7 @@ npm install && npm run dev
     "previous_page": 
 }
 ```
-### Route: http://localhost:8000/companies/id/employees Method: POST
+### Route: http://localhost:8000/companiesAPI/id/employeesAPI Method: POST
 #### Action: create a new employee related to a specific company
 #### The Data will be recieved from postman in this shape:
 ```
@@ -163,7 +157,7 @@ npm install && npm run dev
     }
 }
 ```
-### Route: http://localhost:8000/companies/id/employee/id Method: PATCH/PUT
+### Route: http://localhost:8000/companiesAPI/id/employee/id Method: PATCH/PUT
 #### Action: Update a specific employee related to a specific company
 #### The Data will be recieved from postman in this shape:
 ```
@@ -186,7 +180,7 @@ npm install && npm run dev
     }
 }
 ```
-### Route: http://localhost:8000/companies/id/employees/id Method: DESTROY
+### Route: http://localhost:8000/companiesAPI/id/employeesAPI/id Method: DESTROY
 #### Action: Soft delete a specific employee related to a specific company
 #### The Data will be recieved from postman in this shape:
 ```

@@ -31,7 +31,13 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::view('modals', 'modals')->name('modals');
     Route::view('tables', 'tables')->name('tables');
     Route::view('calendar', 'calendar')->name('calendar');
+
+    // Route::view('companies', 'companies')->name('companies');
+    // Route::view('employees', 'employees')->name('employees');
+
+    Route::resource('companies', 'App\Http\Controllers\Company\CompanyController', ['except' => ['show']]);
+    Route::resource('employees', 'App\Http\Controllers\Employee\EmployeeController', ['except' => ['show']]);
+    // Route::get('employees', 'App\Http\Controllers\Employee\EmployeeController@employees')->name('employees');
 });
 
-Route::post('upload-image','App\Http\Controllers\ImageController@uploadImage')->name('uploadimage');
-Route::get('image','App\Http\Controllers\ImageController@image')->name('image');
+

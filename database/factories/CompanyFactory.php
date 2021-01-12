@@ -27,8 +27,8 @@ class CompanyFactory extends Factory
         return [
             'name' => $name,
             'email' => 'info@'. $name .'.com',
-            'website' => 'www.'. $name .'.com',
-            'logo' => URL::asset("/img/forgot-password-office.jpeg")
+            'website' => 'https//:www.'. $name .'.com',
+            'logo' => "/img/forgot-password-office.jpeg"
         ];
     }
 }

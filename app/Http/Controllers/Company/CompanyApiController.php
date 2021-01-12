@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BaseController;
 
-class CompanyController extends BaseController
+class CompanyApiController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -18,41 +18,25 @@ class CompanyController extends BaseController
      */
     public function index()
     {
-        $companies = Company::simplePaginate(10);
+        $paginated_companies = Company::simplePaginate(10);
 
-        // $companies = Company::all();
+        $companies = collect($paginated_companies->items())->map(function($company) {
 
-        // collect($paginated_companies->items())->map(function($company) {
+            return [
+                'id' => $company->id,
+                'name' => $company->name,
+                'email' => $company->email,
+                'website' => $company->website,
+                'logo' => $company->logo
+            ];
+        });
 
-        //     return [
-        //         'id' => $company->id,
-        //         'name' => $company->name,
-        //         'email' => $company->email,
-        //         'website' => $company->website,
-        //         'logo' => $company->logo
-        //     ];
-        // });
+        return response()->json([
+            'companies' => $companies,
+            'next_page' => $paginated_companies->nextPageUrl(),
+            'previous_page' => $paginated_companies->previousPageUrl(),
+        ], 200);
 
-        // return response()->json([
-        //     'companies' => $companies,
-        //     'next_page' => $paginated_companies->nextPageUrl(),
-        //     'previous_page' => $paginated_companies->previousPageUrl(),
-        // ], 200);
-
-        return view('/companies', [
-            'companies' => $companies
-        ]);
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('create-company');
     }
 
     /**
@@ -67,7 +51,7 @@ class CompanyController extends BaseController
             'name' => 'required|min:3',
             'email' => 'required|email|unique:companies',
             'website' => 'required|URL|unique:companies',
-            // 'logo' => 'required|image|mimes:jpg,jpeg,png'
+            'logo' => 'required|image|mimes:jpg,jpeg,png'
         ];
 
         $this->validate($request, $rules);
@@ -80,22 +64,32 @@ class CompanyController extends BaseController
 
         $company = Company::create($data);
 
-        return redirect('companies');
-
+        return $this->showOne([
+            'id' => $company->id,
+            'name' => $company->name,
+            'email' => $company->email,
+            'website' => $company->website,
+            'logo' => $company->logo
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function edit(Company $company)
+    public function show(Company $company)
     {
-        return view('edit-company', [
-            'company' => $company
+        return $this->showOne([
+            'id' => $company->id,
+            'name' => $company->name,
+            'email' => $company->email,
+            'website' => $company->website,
+            'logo' => $company->logo
         ]);
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -105,6 +99,12 @@ class CompanyController extends BaseController
      */
     public function update(Request $request, Company $company)
     {
+        $rules = [
+            'name' => 'required|min:3',
+            'email' => 'required|email|unique:companies',
+            'website' => 'required|URL|unique:companies',
+            'logo' => 'image|mimes:jpg,jpeg,png'
+        ];
 
         if ($request->has('name')) {
             $company->name = $request->name;
@@ -138,8 +138,13 @@ class CompanyController extends BaseController
 
         $company->refresh();
 
-        return redirect('companies');
-
+        return $this->showOne([
+            'id' => $company->id,
+            'name' => $company->name,
+            'email' => $company->email,
+            'website' => $company->website,
+            'logo' => $company->logo
+        ]);
     }
 
     /**
@@ -152,6 +157,11 @@ class CompanyController extends BaseController
     {
         $company->delete();
 
-        return redirect('companies');
+        return $this->showOne([
+            'name' => $company->name,
+            'email' => $company->email,
+            'website' => $company->website,
+            'logo' => $company->logo
+        ]);
     }
 }

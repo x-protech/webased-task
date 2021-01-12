@@ -5,13 +5,13 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 use App\Traits\ApiResponser;
+use CloudCreativity\LaravelJsonApi\Exceptions\HandlesErrors;
 use Illuminate\Database\QueryException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use CloudCreativity\LaravelJsonApi\Exceptions\HandlesErrors;
 use CloudCreativity\LaravelJsonApi\Exceptions\JsonApiException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -97,6 +97,10 @@ class Handler extends ExceptionHandler
             return parent::render($request, $e);
         }
 
+        // if ($this->isJsonApi($request, $e)) {
+        //     return $this->renderJsonApi($request, $e);
+        // }
+
         return $this->errorResponse('Unexpected Exception. Try later', 500);
 
     }
@@ -127,5 +131,14 @@ class Handler extends ExceptionHandler
     {
         return $this->errorResponse('Unauthenticated.', 401);
     }
+
+    // protected function prepareException(Throwable $e)
+    // {
+    //     if ($e instanceof JsonApiException) {
+    //       return $this->prepareJsonApiException($e);
+    //     }
+
+    //     return parent::prepareException($e);
+    // }
 
 }

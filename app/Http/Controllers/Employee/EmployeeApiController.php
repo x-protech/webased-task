@@ -7,49 +7,33 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 
-class EmployeeController extends BaseController
+class EmployeeApiController extends BaseController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function employees()
     {
-        $employees = Employee::all();
         $paginated_employees = Employee::simplePaginate(10);
 
-        // $employees = collect($paginated_employees->items())->map(function($employee) {
+        $employees = collect($paginated_employees->items())->map(function($employee) {
 
-        //     return [
-        //         'id' => $employee->id,
-        //         'name' => $employee->first_name. ' ' .$employee->last_name,
-        //         'email' => $employee->email,
-        //         'phone_number' => $employee->phone_number,
-        //     ];
-        // });
+            return [
+                'id' => $employee->id,
+                'name' => $employee->first_name. ' ' .$employee->last_name,
+                'email' => $employee->email,
+                'phone_number' => $employee->phone_number,
+            ];
+        });
 
-        // return response()->json([
-        //     'employees' => $employees,
-        //     'next_page' => $paginated_employees->nextPageUrl(),
-        //     'previous_page' => $paginated_employees->previousPageUrl(),
-        // ]);
-        // return $this->showAll($employees, 200);
-
-        return view('/employees', [
-            'employees' => $paginated_employees,
-            'all_employees' => $employees
+        return response()->json([
+            'employees' => $employees,
+            'next_page' => $paginated_employees->nextPageUrl(),
+            'previous_page' => $paginated_employees->previousPageUrl(),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('create-employee');
+        // return $this->showAll($employees, 200);
     }
 
     /**
@@ -65,30 +49,21 @@ class EmployeeController extends BaseController
             'last_name' => 'required|min:3',
             'email' => 'required|email|unique:employees',
             'phone_number' => 'required|Numeric|unique:employees',
-            'name' => 'required|exists:companies'
         ];
-        // dump($request->company_name);
+
         $this->validate($request, $rules);
 
-        $data = $request->except('name');
-
-        $data['company_id'] = Company::where('name', $request->name)->first()->id;
+        $data = $request->all();
+        $data['company_id'] = $company->id;
 
         $employee = Employee::create($data);
 
-        return redirect('employees');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Employee $employee)
-    {
-        return view('edit-employee', [
-            'employee' => $employee
+        return $this->showOne([
+            'id' => $employee->id,
+            'name' => $employee->first_name. ' ' .$employee->last_name,
+            'email' => $employee->email,
+            'phone_number' => $employee->phone_number,
+            'company_id' => $company->id
         ]);
     }
 
@@ -101,13 +76,12 @@ class EmployeeController extends BaseController
      */
     public function update(Request $request, Company $company, Employee $employee)
     {
-        // $rules = [
-        //     'first_name' => 'min:3',
-        //     'last_name' => 'min:3',
-        //     'email' => 'email|unique:employees',
-        //     'phone_number' => 'Numeric',
-        //     'name' => 'exists:companies'
-        // ];
+        $rules = [
+            'first_name' => 'min:3',
+            'last_name' => 'min:3',
+            'email' => 'email|unique:employees',
+            'phone_number' => 'Numeric',
+        ];
 
         // $Employee = Company::find($company->id)->employees()->where('id', $employee->id)->first();
 
@@ -127,10 +101,6 @@ class EmployeeController extends BaseController
             $employee->phone_number = $request->phone_number;
         }
 
-        if ($request->has('name') && $employee->company->name != $request->name) {
-            $employee->company_id = Company::where('name', $request->name)->first()->id;
-        }
-
         if(!$employee->isDirty()) {
             return $this->errorResponse('You need to specify a different value to update',
                  422);
@@ -142,7 +112,13 @@ class EmployeeController extends BaseController
 
         $employee->refresh();
 
-        return redirect('employees');
+        return $this->showOne([
+            'id' => $employee->id,
+            'name' => $employee->first_name. ' ' .$employee->last_name,
+            'email' => $employee->email,
+            'phone_number' => $employee->phone_number,
+            'company_id' => $employee->company_id
+        ]);
     }
 
     /**
@@ -155,6 +131,11 @@ class EmployeeController extends BaseController
     {
         $employee->delete();
 
-        return redirect('employees');
+        return $this->showOne([
+            'name' => $employee->first_name. ' ' .$employee->last_name,
+            'email' => $employee->email,
+            'phone_number' => $employee->phone_number,
+            'company_id' => $employee->company_id
+        ]);
     }
 }

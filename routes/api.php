@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +19,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('companies', 'App\Http\Controllers\Company\CompanyController', ['except' => ['create', 'edit', 'update']]);
-Route::post('companies/{company}', 'App\Http\Controllers\Company\CompanyController@update')->name('companies.update');
-Route::resource('companies.employees', 'App\Http\Controllers\Employee\EmployeeController', ['except' => ['index', 'create', 'edit']]);
+Route::resource('companiesAPI', 'App\Http\Controllers\Company\CompanyApiController', ['except' => [
+    'create', 'edit', 'update']])->parameters([
+    'companiesAPI' => 'company',
+]);
+Route::post('companiesAPI/{company}', 'App\Http\Controllers\Company\CompanyApiController@update')->name('companies.update');
+Route::resource('companiesAPI.employeesAPI', 'App\Http\Controllers\Employee\EmployeeApiController', ['except' => [
+    'index', 'create', 'edit']])->parameters([
+        'companiesAPI' => 'company',
+        'employeesAPI' => 'employee'
+    ]);
 
-Route::get('employees', 'App\Http\Controllers\Employee\EmployeeController@employees')->name('employees');
+Route::get('employeesAPI', 'App\Http\Controllers\Employee\EmployeeApiController@employees')->name('employees');
+
+// JsonApi::register('default')->withNamespace('Api')->routes(function ($api) {
+//     $api->resource('companies');
+//     $api->resource('employees');
+// });
